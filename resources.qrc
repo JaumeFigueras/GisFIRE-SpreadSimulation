@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/gis_fire_spread_simulator" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>

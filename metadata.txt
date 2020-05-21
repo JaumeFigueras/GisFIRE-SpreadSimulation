@@ -1,0 +1,47 @@
+# This file contains metadata for your plugin.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=GisFIRE Wildfire Spread Simulator
+qgisMinimumVersion=3.10
+description=GisFire modude to simulate wildfire spread. It is mainly a FARSITE implementation.
+version=0.1
+author=Jaume Figueras
+email=jaume.figueras@upc.edu
+
+about=GisFIRE SpreadSimulation is a plugin for QGIS that implements a wildfire spread simulator and other tools related to wildfire management. It is part of a PhD and implements a FARSITE software port to python integrated into QGIS. It is also an intent to be a framework to develop and test other spread simulation algorithms different from the ones implemented in FARSITE or other management tools.
+
+tracker=https://github.com/JaumeFigueras/GisFIRE-SpreadSimulation
+repository=https://github.com/JaumeFigueras/GisFIRE-SpreadSimulation
+# End of mandatory metadata
+
+# Recommended items:
+
+hasProcessingProvider=no
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=python
+
+homepage=https://github.com/JaumeFigueras/GisFIRE-SpreadSimulation
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
+
