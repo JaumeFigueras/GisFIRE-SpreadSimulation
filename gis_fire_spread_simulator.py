@@ -92,7 +92,7 @@ class GisFIRESpreadSimulator:
         """Create the toolbar buttons that GisFIRE uses as shortcuts."""
         # Setup parameters
         action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'), self.tr('Convert GisFIRE Projet'), None)
-        action.triggered.connect(self.onSetup)
+        action.triggered.connect(self.onConvertProject)
         action.setEnabled(True)
         action.setCheckable(False)
         action.setStatusTip(self.tr('Convert GisFIRE Projet'))
@@ -108,7 +108,7 @@ class GisFIRESpreadSimulator:
         action = self._menu.addAction(self.tr('Convert GisFIRE Projet'))
         action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'))
         action.setIconVisibleInMenu(True)
-        action.triggered.connect(self.onSetup)
+        action.triggered.connect(self.onConvertProject)
         self._menuActions['setup'] = action
 
     def _addRelations(self):
@@ -181,3 +181,6 @@ class GisFIRESpreadSimulator:
                 self._menu_gisfire.deleteLater()
 
     #--------------------------------------------------------------------------
+
+    def onConvertProject(self):
+        pass
