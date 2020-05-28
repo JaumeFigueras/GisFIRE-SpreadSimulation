@@ -90,23 +90,38 @@ class GisFIRESpreadSimulator:
 
     def _addToolbarActions(self):
         """Create the toolbar buttons that GisFIRE uses as shortcuts."""
-        # Setup parameters
-        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'), self.tr('Convert GisFIRE Projet'), None)
+        # Convert to GisFIRE Project
+        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'), self.tr('Convert GisFIRE Project'), None)
         action.triggered.connect(self.onConvertProject)
         action.setEnabled(True)
         action.setCheckable(False)
-        action.setStatusTip(self.tr('Convert GisFIRE Projet'))
-        action.setWhatsThis(self.tr('Convert GisFIRE Projet'))
+        action.setStatusTip(self.tr('Convert GisFIRE Project'))
+        action.setWhatsThis(self.tr('Convert GisFIRE Project'))
         self._toolbar.addAction(action)
         self._toolbarActions['convert'] = action
+        # Setup parameters
+        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/setup.png'), self.tr('Setup'), None)
+        action.triggered.connect(self.onSetup)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Setup'))
+        action.setWhatsThis(self.tr('Setup'))
+        self._toolbar.addAction(action)
+        self._toolbarActions['setup'] = action
         # Separator
         self._toolbar.addSeparator()
 
     def _addMenuActions(self):
         """Create the menu entries that allow GisFIRE procedures."""
-        # Setup parameters
+        # Convert to GisFIRE Project
         action = self._menu.addAction(self.tr('Convert GisFIRE Projet'))
         action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'))
+        action.setIconVisibleInMenu(True)
+        action.triggered.connect(self.onConvertProject)
+        self._menuActions['convert'] = action
+        # Setup parameters
+        action = self._menu.addAction(self.tr('Setup'))
+        action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/setup.png'))
         action.setIconVisibleInMenu(True)
         action.triggered.connect(self.onConvertProject)
         self._menuActions['setup'] = action
@@ -183,4 +198,7 @@ class GisFIRESpreadSimulator:
     #--------------------------------------------------------------------------
 
     def onConvertProject(self):
+        pass
+
+    def onSetup(self):
         pass
