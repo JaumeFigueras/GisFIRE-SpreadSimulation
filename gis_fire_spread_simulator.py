@@ -90,11 +90,26 @@ class GisFIRESpreadSimulator:
 
     def _addToolbarActions(self):
         """Create the toolbar buttons that GisFIRE uses as shortcuts."""
-        pass
+        # Setup parameters
+        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'), self.tr('Convert GisFIRE Projet'), None)
+        action.triggered.connect(self.onSetup)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Convert GisFIRE Projet'))
+        action.setWhatsThis(self.tr('Convert GisFIRE Projet'))
+        self._toolbar.addAction(action)
+        self._toolbarActions['convert'] = action
+        # Separator
+        self._toolbar.addSeparator()
 
     def _addMenuActions(self):
         """Create the menu entries that allow GisFIRE procedures."""
-        pass
+        # Setup parameters
+        action = self._menu.addAction(self.tr('Convert GisFIRE Projet'))
+        action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/convert.png'))
+        action.setIconVisibleInMenu(True)
+        action.triggered.connect(self.onSetup)
+        self._menuActions['setup'] = action
 
     def _addRelations(self):
         """Create mutually exclusive relations between toolbar buttons."""
