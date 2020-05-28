@@ -119,6 +119,26 @@ class GisFIRESpreadSimulator:
         action.setWhatsThis(self.tr('Set Ignition Point'))
         self._toolbar.addAction(action)
         self._toolbarActions['ignition'] = action
+        # Separator
+        self._toolbar.addSeparator()
+        # Simulation Step
+        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/step.png'), self.tr('Step'), None)
+        action.triggered.connect(self.onSimulationStep)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Step'))
+        action.setWhatsThis(self.tr('Step'))
+        self._toolbar.addAction(action)
+        self._toolbarActions['step'] = action
+        # Simulation Stop
+        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/stop.png'), self.tr('Stop'), None)
+        action.triggered.connect(self.onSimulationStop)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Stop'))
+        action.setWhatsThis(self.tr('Stop'))
+        self._toolbar.addAction(action)
+        self._toolbarActions['stop'] = action
 
     def _addMenuActions(self):
         """Create the menu entries that allow GisFIRE procedures."""
@@ -132,14 +152,26 @@ class GisFIRESpreadSimulator:
         action = self._menu.addAction(self.tr('Setup'))
         action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/setup.png'))
         action.setIconVisibleInMenu(True)
-        action.triggered.connect(self.onConvertProject)
+        action.triggered.connect(self.onSetup)
         self._menuActions['setup'] = action
         # Set ignition point
         action = self._menu.addAction(self.tr('Set Ignition Point'))
         action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/ignition.png'))
         action.setIconVisibleInMenu(True)
-        action.triggered.connect(self.onConvertProject)
+        action.triggered.connect(self.onSetIgnitionPoint)
         self._menuActions['ignition'] = action
+        # Simulation Step
+        action = self._menu.addAction(self.tr('Step'))
+        action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/step.png'))
+        action.setIconVisibleInMenu(True)
+        action.triggered.connect(self.onSimulationStep)
+        self._menuActions['step'] = action
+        # Simulation Stop
+        action = self._menu.addAction(self.tr('Stop'))
+        action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/stop.png'))
+        action.setIconVisibleInMenu(True)
+        action.triggered.connect(self.onSimulationStop)
+        self._menuActions['stop'] = action
 
     def _addRelations(self):
         """Create mutually exclusive relations between toolbar buttons."""
@@ -219,4 +251,10 @@ class GisFIRESpreadSimulator:
         pass
 
     def onSetIgnitionPoint(self):
+        pass
+
+    def onSimulationStep(self):
+        pass
+
+    def onSimulationStop(self):
         pass

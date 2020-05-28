@@ -4,5 +4,7 @@
         <file alias="convert.png">/icons/convert-project-64px.png</file>
         <file alias="setup.png">/icons/setup-64px.png</file>
         <file alias="ignition.png">/icons/ignition-point-64px.png</file>
+        <file alias="step.png">/icons/next-64px.png</file>
+        <file alias="stop.png">/icons/stop-64px.png</file>
     </qresource>
 </RCC>
