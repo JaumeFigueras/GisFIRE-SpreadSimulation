@@ -35,6 +35,7 @@ from .gis_fire_spread_simulator_dockwidget import GisFIRESpreadSimulatorDockWidg
 import os.path
 
 from .project import project as Project
+from qgis.core import QgsProject
 
 class GisFIRESpreadSimulator:
     """QGIS Plugin Implementation."""
@@ -74,6 +75,17 @@ class GisFIRESpreadSimulator:
         self._dockwidget = None
         # Initialization of GisFIRE data layers
         self._layers = {}
+
+        # Connect to project signals to allow plugin interacton when a new
+        # project is created or loaded
+        self.iface.newProjectCreated.connect(self.onNewProject)
+        project = QgsProject.instance()
+        if (project is not None):
+            project.readProject.connect(self.onReadProject)
+            project.projectSaved.connect(self.onSavedProject)
+            project.homePathChanged.connect(self.onHomePathChangedProject)
+            project.fileNameChanged.connect(self.onFileNameChangedProject)
+
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -235,11 +247,10 @@ class GisFIRESpreadSimulator:
             else:
                 if Project.isAGisFireProject():
                     self._enableUi()
-                    #TODO: Load project layers
+                    #TODO: Load project layers (prepareProject)
                 else:
                     self._disableUi()
                     self._enableConvertProject()
-
 
     #--------------------------------------------------------------------------
 
@@ -275,6 +286,48 @@ class GisFIRESpreadSimulator:
                 self.iface.mainWindow().menuBar().removeAction(self._menu_gisfire.menuAction())
                 self._menu_gisfire.menuAction().deleteLater()
                 self._menu_gisfire.deleteLater()
+        # Disconnect Project slots
+        self.iface.newProjectCreated.disconnect(self.onNewProject)
+        project = QgsProject.instance()
+        if (project is not None):
+            project.readProject.disconnect(self.onReadProject)
+            project.projectSaved.disconnect(self.onSavedProject)
+            project.homePathChanged.disconnect(self.onHomePathChangedProject)
+            project.fileNameChanged.disconnect(self.onFileNameChangedProject)
+
+    #--------------------------------------------------------------------------
+
+    def onReadProject(self):
+        """Slot connection for the Read Project signal. It checks if the loadaed
+        project is a GisFIRE project and updates the GisFIRE UI agordingly"""
+        if Project.isAGisFireProject():
+            #TODO: Load project layers (prepareProject)
+            self._enableUi()
+        else:
+            self._enableConvertProject()
+
+    def onNewProject(self):
+        """Slot connection for the New Project signal. It disables all the
+        GisFIRE UI because the project has to be saved to be converted to a
+        GisFIRE project"""
+        self._disableUi()
+
+    def onSavedProject(self):
+        """Slot connection for the Save Project signal. It enables convert
+        project UI because once the project is saved it can be converted to a
+        GisFIRE project"""
+        if not Project.isAGisFireProject():
+            self._enableConvertProject()
+
+    def onHomePathChangedProject(self):
+        if Project.isAGisFireProject():
+            # TODO: Copy geopackage
+            pass
+
+    def onFileNameChangedProject(self):
+        if Project.isAGisFireProject():
+            # TODO: Copy geopackage
+            pass
 
     #--------------------------------------------------------------------------
 
