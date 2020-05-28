@@ -34,6 +34,8 @@ from .resources import *
 from .gis_fire_spread_simulator_dockwidget import GisFIRESpreadSimulatorDockWidget
 import os.path
 
+from .project import project as Project
+
 class GisFIRESpreadSimulator:
     """QGIS Plugin Implementation."""
 
@@ -173,6 +175,24 @@ class GisFIRESpreadSimulator:
         action.triggered.connect(self.onSimulationStop)
         self._menuActions['stop'] = action
 
+    def _disableUi(self):
+        for key in self._menuActions.keys():
+            self._menuActions[key].setEnabled(False)
+            self._toolbarActions[key].setEnabled(False)
+
+    def _enableUi(self):
+        for key in self._menuActions.keys():
+            self._menuActions[key].setEnabled(True)
+            self._toolbarActions[key].setEnabled(True)
+
+    def _disableConvertProject(self):
+        self._menuActions['convert'].setEnabled(True)
+        self._toolbarActions['convert'].setEnabled(True)
+
+    def _enableConvertProject(self):
+        self._menuActions['convert'].setEnabled(True)
+        self._toolbarActions['convert'].setEnabled(True)
+
     def _addRelations(self):
         """Create mutually exclusive relations between toolbar buttons."""
         pass
@@ -206,6 +226,20 @@ class GisFIRESpreadSimulator:
         self._addMenuActions()
         # Create relations with existing menus and buttons
         self._addRelations()
+
+        if not type(Project.getProjectName()) is str:
+            self._disableUi()
+        else:
+            if Project.getProjectName() == '':
+                self._disableUi()
+            else:
+                if Project.isAGisFireProject():
+                    self._enableUi()
+                    #TODO: Load project layers
+                else:
+                    self._disableUi()
+                    self._enableConvertProject()
+
 
     #--------------------------------------------------------------------------
 
