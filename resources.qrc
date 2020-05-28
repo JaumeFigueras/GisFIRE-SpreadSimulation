@@ -3,5 +3,6 @@
         <file alias="gisfire-simulation.png">/icons/gis-fire-spread-simulation-64px.png</file>
         <file alias="convert.png">/icons/convert-project-64px.png</file>
         <file alias="setup.png">/icons/setup-64px.png</file>
+        <file alias="ignition.png">/icons/ignition-point-64px.png</file>
     </qresource>
 </RCC>

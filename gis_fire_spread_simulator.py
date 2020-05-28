@@ -110,6 +110,15 @@ class GisFIRESpreadSimulator:
         self._toolbarActions['setup'] = action
         # Separator
         self._toolbar.addSeparator()
+        # Set ignition point
+        action = QAction(QIcon(':/plugins/gis_fire_spread_simulator/ignition.png'), self.tr('Set Ignition Point'), None)
+        action.triggered.connect(self.onSetIgnitionPoint)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Set Ignition Point'))
+        action.setWhatsThis(self.tr('Set Ignition Point'))
+        self._toolbar.addAction(action)
+        self._toolbarActions['ignition'] = action
 
     def _addMenuActions(self):
         """Create the menu entries that allow GisFIRE procedures."""
@@ -125,6 +134,12 @@ class GisFIRESpreadSimulator:
         action.setIconVisibleInMenu(True)
         action.triggered.connect(self.onConvertProject)
         self._menuActions['setup'] = action
+        # Set ignition point
+        action = self._menu.addAction(self.tr('Set Ignition Point'))
+        action.setIcon(QIcon(':/plugins/gis_fire_spread_simulator/ignition.png'))
+        action.setIconVisibleInMenu(True)
+        action.triggered.connect(self.onConvertProject)
+        self._menuActions['ignition'] = action
 
     def _addRelations(self):
         """Create mutually exclusive relations between toolbar buttons."""
@@ -201,4 +216,7 @@ class GisFIRESpreadSimulator:
         pass
 
     def onSetup(self):
+        pass
+
+    def onSetIgnitionPoint(self):
         pass
