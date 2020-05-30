@@ -36,6 +36,8 @@ import os.path
 
 from .project import project as Project
 from qgis.core import QgsProject
+from .project.settings import Settings
+SETTINGS = Settings()
 
 class GisFIRESpreadSimulator:
     """QGIS Plugin Implementation."""
@@ -332,7 +334,12 @@ class GisFIRESpreadSimulator:
     #--------------------------------------------------------------------------
 
     def onConvertProject(self):
-        pass
+        if SETTINGS.gis_fire_version is None:
+            SETTINGS.gis_fire_version = SETTINGS.VERSION
+            self._enableUi()
+        else:
+            SETTINGS.gis_fire_version = SETTINGS.NONE
+            self._disableUi()
 
     def onSetup(self):
         pass
