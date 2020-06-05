@@ -258,26 +258,32 @@ class GisFIRESpreadSimulator:
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
+        print("Remove toolbar items")
         # Remove toolbar items
         for action in self._toolbarActions.values():
             action.triggered.disconnect()
             self.iface.removeToolBarIcon(action)
             action.deleteLater()
+        print("Remove toolbar")
         # Remove toolbar
         if not(self._toolbar is None):
             self._toolbar.deleteLater()
+        print("Remove menu items")
         # Remove menu items
         for action in self._menuActions.values():
             action.triggered.disconnect()
             self._menu.removeAction(action)
             action.deleteLater()
+        print("Remove menu")
         # Remove menu
         if not(self._menu is None):
             self._menu.deleteLater()
+        print("Remove dockwidget")
         # Remove dockwidget
         if self._dockwidget != None:
             self._dockwidget.hide()
             self._dockwidget.deleteLater()
+        print("Remove the menu_gisfire only if I'm the only GisFIRE module installed")
         # Remove the menu_gisfire only if I'm the only GisFIRE module installed
         count = 0
         for name in active_plugins:
@@ -288,13 +294,19 @@ class GisFIRESpreadSimulator:
                 self.iface.mainWindow().menuBar().removeAction(self._menu_gisfire.menuAction())
                 self._menu_gisfire.menuAction().deleteLater()
                 self._menu_gisfire.deleteLater()
+        print("Disconnect Project slots")
         # Disconnect Project slots
+        print("self.iface.newProjectCreated.disconnect(self.onNewProject)")
         self.iface.newProjectCreated.disconnect(self.onNewProject)
         project = QgsProject.instance()
         if (project is not None):
+            print("project.readProject.disconnect(self.onReadProject)")
             project.readProject.disconnect(self.onReadProject)
+            print("project.projectSaved.disconnect(self.onSavedProject)")
             project.projectSaved.disconnect(self.onSavedProject)
+            print("project.homePathChanged.disconnect(self.onHomePathChangedProject)")
             project.homePathChanged.disconnect(self.onHomePathChangedProject)
+            print("project.fileNameChanged.disconnect(self.onFileNameChangedProject)")
             project.fileNameChanged.disconnect(self.onFileNameChangedProject)
 
     #--------------------------------------------------------------------------
