@@ -80,14 +80,14 @@ class GisFIRESpreadSimulator:
 
         # Connect to project signals to allow plugin interacton when a new
         # project is created or loaded
-        self.iface.newProjectCreated.connect(self.onNewProject)
+        """self.iface.newProjectCreated.connect(self.onNewProject)
         project = QgsProject.instance()
         if (project is not None):
             project.readProject.connect(self.onReadProject)
             project.projectSaved.connect(self.onSavedProject)
             project.homePathChanged.connect(self.onHomePathChangedProject)
             project.fileNameChanged.connect(self.onFileNameChangedProject)
-
+        """
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -289,13 +289,14 @@ class GisFIRESpreadSimulator:
                 self._menu_gisfire.menuAction().deleteLater()
                 self._menu_gisfire.deleteLater()
         # Disconnect Project slots
-        self.iface.newProjectCreated.disconnect(self.onNewProject)
-        project = QgsProject.instance()
+        # self.iface.newProjectCreated.disconnect(self.onNewProject)
+        """project = QgsProject.instance()
         if (project is not None):
             project.readProject.disconnect(self.onReadProject)
             project.projectSaved.disconnect(self.onSavedProject)
             project.homePathChanged.disconnect(self.onHomePathChangedProject)
             project.fileNameChanged.disconnect(self.onFileNameChangedProject)
+        """
 
     #--------------------------------------------------------------------------
 
