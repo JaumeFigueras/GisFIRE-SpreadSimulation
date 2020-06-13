@@ -189,10 +189,6 @@ class GisFIRESpreadSimulator:
             self._menuActions[key].setEnabled(True)
             self._toolbarActions[key].setEnabled(True)
 
-    def _disableConvertProject(self):
-        self._menuActions['convert'].setEnabled(True)
-        self._toolbarActions['convert'].setEnabled(True)
-
     def _enableConvertProject(self):
         self._menuActions['convert'].setEnabled(True)
         self._toolbarActions['convert'].setEnabled(True)
@@ -231,18 +227,14 @@ class GisFIRESpreadSimulator:
         # Create relations with existing menus and buttons
         self._addRelations()
 
-        if not type(getProjectName()) is str:
-            self._disableUi()
+        # Connect to project signals to allow plugin interacton when a new
+        # project is created or loaded
+        self.iface.newProjectCreated.connect(self.onNewProject)
+        if isAGisFireProject():
+            self._enableUi()
         else:
-            if getProjectName() == '':
-                self._disableUi()
-            else:
-                if isAGisFireProject():
-                    self._enableUi()
-                    #TODO: Load project layers (prepareProject)
-                else:
-                    self._disableUi()
-                    self._enableConvertProject()
+            self._disableUi()
+            self._enableConvertProject()
 
     #--------------------------------------------------------------------------
 
@@ -280,8 +272,19 @@ class GisFIRESpreadSimulator:
                 self.iface.mainWindow().menuBar().removeAction(self._menu_gisfire.menuAction())
                 self._menu_gisfire.menuAction().deleteLater()
                 self._menu_gisfire.deleteLater()
+        # Remove project slots
+        self.iface.newProjectCreated.disconnect(self.onNewProject)
 
     #--------------------------------------------------------------------------
+
+    def onNewProject(self):
+        """Slot connection for the New Project signal.
+        """
+        if isAGisFireProject():
+            self._enableUi()
+        else:
+            self._disableUi()
+            self._enableConvertProject()
 
     def onConvertProject(self):
         if SETTINGS.gis_fire_version is None:
@@ -290,6 +293,7 @@ class GisFIRESpreadSimulator:
         else:
             SETTINGS.gis_fire_version = SETTINGS.NONE
             self._disableUi()
+            self._enableConvertProject()
 
     def onSetup(self):
         pass
