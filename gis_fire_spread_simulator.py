@@ -34,7 +34,8 @@ from .resources import *
 from .gis_fire_spread_simulator_dockwidget import GisFIRESpreadSimulatorDockWidget
 import os.path
 
-from .project import project as Project
+from .project.project import isAGisFireProject
+from .project.project import getProjectName
 from qgis.core import QgsProject
 from .project.settings import Settings
 SETTINGS = Settings()
@@ -230,13 +231,13 @@ class GisFIRESpreadSimulator:
         # Create relations with existing menus and buttons
         self._addRelations()
 
-        if not type(Project.getProjectName()) is str:
+        if not type(getProjectName()) is str:
             self._disableUi()
         else:
-            if Project.getProjectName() == '':
+            if getProjectName() == '':
                 self._disableUi()
             else:
-                if Project.isAGisFireProject():
+                if isAGisFireProject():
                     self._enableUi()
                     #TODO: Load project layers (prepareProject)
                 else:
@@ -254,6 +255,7 @@ class GisFIRESpreadSimulator:
             action.deleteLater()
         # Remove toolbar
         if not(self._toolbar is None):
+            self.iface.mainWindow().removeToolBar(self._toolbar)
             self._toolbar.deleteLater()
         # Remove menu items
         for action in self._menuActions.values():
@@ -262,6 +264,7 @@ class GisFIRESpreadSimulator:
             action.deleteLater()
         # Remove menu
         if not(self._menu is None):
+            self._menu_gisfire.removeAction(self._menu.menuAction())
             self._menu.deleteLater()
         # Remove dockwidget
         if self._dockwidget != None:
