@@ -25,7 +25,10 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 from PyQt5.QtWidgets import QMenu
+
 from qgis.utils import active_plugins
+from qgis.core import Qgis
+from qgis.core import QgsProject
 
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -33,11 +36,13 @@ from .resources import *
 # Import the code for the DockWidget
 from .gis_fire_spread_simulator_dockwidget import GisFIRESpreadSimulatorDockWidget
 import os.path
-
 from .project.project import isAGisFireProject
 from .project.project import getProjectName
-from qgis.core import QgsProject
+from .project.layer import createIgnitionLayer
+from .project.layer import createPerimeterLayer
+from .project.layer import addLayerInPosition
 from .project.settings import Settings
+
 SETTINGS = Settings()
 
 class GisFIRESpreadSimulator:
@@ -288,7 +293,21 @@ class GisFIRESpreadSimulator:
 
     def onConvertProject(self):
         if SETTINGS.gis_fire_version is None:
+            layers = QgsProject.instance().mapLayersByName(SETTINGS.ignition_layer_name)
+            if len(layers) > 0:
+                self.iface.messageBar().pushMessage("", self.tr("There exists an ignition layer"), level=Qgis.Critical, duration=5)
+                return
+            layers = QgsProject.instance().mapLayersByName(SETTINGS.perimeter_layer_name)
+            if len(layers) > 0:
+                self.iface.messageBar().pushMessage("", self.tr("There exists a perimeter layer"), level=Qgis.Critical, duration=5)
+                return
             SETTINGS.gis_fire_version = SETTINGS.VERSION
+            SETTINGS.ignition_layer_name = self.tr(SETTINGS.IGNITION_POINTS)
+            SETTINGS.perimeter_layer_name = self.tr(SETTINGS.FIRE_PERIMETER)
+            layer = createIgnitionLayer(SETTINGS.ignition_layer_name)
+            addLayerInPosition(layer, 1)
+            layer = createPerimeterLayer(SETTINGS.perimeter_layer_name)
+            addLayerInPosition(layer, 2)
             self._enableUi()
         else:
             SETTINGS.gis_fire_version = SETTINGS.NONE
