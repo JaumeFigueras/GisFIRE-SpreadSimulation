@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/plugins/gisfire_spread_simulation" >
+      <file alias="lightnings.png">/icons/gis-fire-spread-simulation-64px.png</file>
+      <file alias="setup.png">/icons/setup-64px.png</file>
+    </qresource>
+</RCC>

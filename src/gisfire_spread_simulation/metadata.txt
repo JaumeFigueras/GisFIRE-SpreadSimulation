@@ -1,0 +1,29 @@
+# Mandatory metadata
+
+[general]
+name=GisFIRE Spread Simulation
+email=jaume.figueras@upc.edu
+author=Jaume Figueras
+qgisMinimumVersion=3.10
+description=GisFIRE module to simulate wildfires
+about=GisFIRE is a plugin for QGIS that implements several tools used by fire agencies. The Spread Simulation is a
+    plugin for QGIS that implements a wildfire spread simulator and other tools related to wildfire management. It is part
+    of a PhD and implements a FARSITE port to python integrated into QGIS. It is also an intent to be a framework to
+    develop and test other spread simulation algorithms different from the ones implemented in FARSITE or other management
+    tools.
+version=0.3
+tracker=https://github.com/JaumeFigueras/GisFIRE-SpreadSimulation/issues
+repository=https://github.com/JaumeFigueras/GisFIRE-SpreadSimulation
+
+# Optional metadata
+category=Vector
+changelog=Project start
+tags=wildfire,lightning
+homepage=https://github.com/JaumeFigueras/GisFIRE-SpreadSimulation
+icon=icons/gis-fire-spread-simulation-64px.png
+experimental=True
+deprecated=False
+qgisMaximumVersion=3.99
+plugin_dependencies=
+server=False
+hasProcessingProvider=no
