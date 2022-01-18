@@ -4,7 +4,13 @@ from qgis.PyQt.QtCore import QSettings
 
 
 @pytest.fixture(scope='session')
-def qgis_locale(request: SubRequest):
+def qgis_locale(request: SubRequest) -> QSettings:
+    """
+    TODO
+
+    :param request:
+    :type request: SubRequest
+    """
     if hasattr(request, 'param'):
         locale = request.param['locale'] if 'locale' in request.param else 'EN'
     else:

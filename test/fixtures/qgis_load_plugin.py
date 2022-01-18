@@ -3,10 +3,20 @@ import sys
 import qgis.utils
 from typing import Union
 from typing import List
+from typing import Dict
+from _pytest.fixtures import SubRequest
 
 
 @pytest.fixture(scope='session')
-def qgis_plugin(request):
+def qgis_plugin(request: SubRequest) -> Dict[str, object]:
+    """
+    TODO
+
+    :param request:
+    :type request: SubRequest
+    :return:
+    :rtype: Dict[str, object]
+    """
     paths: Union[str, List[str]] = request.param['paths'] if 'paths' in request.param else None
     names: Union[str, List[str]] = request.param['names'] if 'names' in request.param else None
     if (names is None) or (paths is None):
