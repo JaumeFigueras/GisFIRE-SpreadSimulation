@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os.path
-
-from qgis.PyQt.QtCore import QSettings
-from qgis.PyQt.QtCore import QTranslator
-from qgis.PyQt.QtCore import QCoreApplication
-from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction
-from qgis.PyQt.QtWidgets import QDialog
-from qgis.PyQt.QtWidgets import QToolBar
-from qgis.PyQt.QtWidgets import QMenu
-from qgis.gui import QgisInterface
-from qgis.core import QgsMapLayer
-import qgis.utils
-from qgis.core import QgsSettings
 from typing import Dict
 from typing import Union
 
-from .resources import *
+import qgis.utils
+from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtCore import QLocale
+from qgis.PyQt.QtCore import QSettings
+from qgis.PyQt.QtCore import QTranslator
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtWidgets import QDialog
+from qgis.PyQt.QtWidgets import QMenu
+from qgis.PyQt.QtWidgets import QToolBar
+from qgis.core import QgsMapLayer
+from qgis.gui import QgisInterface
 
 
 class GisFIRESpreadSimulation:
@@ -45,18 +43,33 @@ class GisFIRESpreadSimulation:
         # Save reference to the QGIS interface
         self.iface: QgisInterface = iface
 
-        # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
+        if QSettings().value('locale/overrideFlag', type=bool):
+            locale = QSettings().value('locale/userLocale')
+        else:
+            locale = QLocale.system().name()
+
+        locale_path = os.path.join(
+            os.path.dirname(__file__),
+            'i18n',
+            'gisfire_spread_simulation_{}.qm'.format(locale[0:2]))
+
+        if os.path.exists(locale_path):
+            self.translator = QTranslator()
+            self.translator.load(locale_path)
+            QCoreApplication.installTranslator(self.translator)
+
+        """# initialize locale
+        locale: str = QSettings().value('locale/userLocale')[0:2]
         plugin_dir = os.path.dirname(__file__)
         locale_path = os.path.join(
             plugin_dir,
             'i18n',
-            '{}.qm'.format(locale))
+            'gisfire_spread_simulation_{}.qm'.format(locale.lower()))
 
         if os.path.exists(locale_path):
             translator = QTranslator()
             translator.load(locale_path)
-            QCoreApplication.installTranslator(translator)
+            QCoreApplication.installTranslator(translator)"""
 
         # Initialization of UI references
         self._toolbar_actions: Dict[str, QAction] = dict()
@@ -67,6 +80,7 @@ class GisFIRESpreadSimulation:
         self._dlg: Union[QDialog, None] = None
         # Initialization of GisFIRE data layers
         self._layers: Dict[str, QgsMapLayer] = dict()
+        self._core_application = QCoreApplication.instance()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message: str) -> str:
@@ -159,7 +173,7 @@ class GisFIRESpreadSimulation:
         Creates the menu entries that allow GisFIRE procedures.
         """
         # Setup parameters
-        action = self._menu.addAction(self.tr('Setup'))
+        action: QAction = self._menu.addAction(self.tr('Setup'))
         action.setIcon(QIcon(':/gisfire_spread_simulation/setup.png'))
         action.setIconVisibleInMenu(True)
         # noinspection PyUnresolvedReferences
