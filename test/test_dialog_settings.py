@@ -4,28 +4,25 @@
 from pathlib import Path
 from typing import Any
 from typing import Dict
-from typing import Union
 
 import pytest
 import qgis.utils
 from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QPalette
 from pytest_qgis.qgis_bot import QgisBot
 from pytestqt.qtbot import QtBot
 from qgis.PyQt.QtCore import QSettings
 from qgis.PyQt.QtWidgets import QAction
 from qgis.PyQt.QtWidgets import QDialogButtonBox
 from qgis.PyQt.QtWidgets import QPushButton
-from qgis.PyQt.QtWidgets import QLineEdit
 from qgis.core import QgsApplication
-from qgis.core import QgsMapLayer
-from qgis.core import QgsVectorLayer
 from qgis.core import QgsProject
-from PyQt5.QtGui import QPalette
-from PyQt5.QtGui import QColor
+from qgis.core import QgsVectorLayer
 
 from src.gisfire_spread_simulation.gisfire_spread_simulation import GisFIRESpreadSimulation
-from src.gisfire_spread_simulation.ui.dialogs.settings import SettingsDialog
 from src.gisfire_spread_simulation.ui.dialogs.layer_name import LayerNameDialog
+from src.gisfire_spread_simulation.ui.dialogs.settings import SettingsDialog
 
 
 # noinspection DuplicatedCode
@@ -723,4 +720,3 @@ def test_settings_application_03(qgis_app: QgsApplication, qgis_locale: QSetting
                                                                          'land_cover_layer_id', '')
     assert land_cover_type_ok
     assert land_cover_layer_id == vl_f.id()
-
