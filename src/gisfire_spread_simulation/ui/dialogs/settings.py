@@ -6,20 +6,20 @@ from typing import List
 from typing import Union
 
 from qgis.PyQt.QtWidgets import QDialog
-from qgis.PyQt.QtWidgets import QWidget
-from qgis.PyQt.QtWidgets import QPushButton
 from qgis.PyQt.QtWidgets import QDialogButtonBox
+from qgis.PyQt.QtWidgets import QPushButton
+from qgis.PyQt.QtWidgets import QWidget
 from qgis.core import QgsMapLayer
-from qgis.core import QgsVectorLayer
 from qgis.core import QgsProject
+from qgis.core import QgsVectorLayer
 from qgis.core import QgsWkbTypes
 from qgis.gui import QgsMapLayerComboBox
 
-from ..ui import get_ui_class
 from .layer_name import LayerNameDialog
+from ..ui import get_ui_class
+from ...qgis_helper_functions.layer import add_layer_in_position
 from ...qgis_helper_functions.layer import create_ignition_layer
 from ...qgis_helper_functions.layer import create_perimeter_layer
-from ...qgis_helper_functions.layer import add_layer_in_position
 
 FORM_CLASS = get_ui_class(os.path.dirname(__file__), 'settings.ui')
 

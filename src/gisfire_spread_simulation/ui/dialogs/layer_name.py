@@ -5,18 +5,14 @@ from typing import Dict
 from typing import List
 from typing import Union
 
-from qgis.PyQt.QtWidgets import QDialog
-from qgis.PyQt.QtWidgets import QWidget
-from qgis.PyQt.QtWidgets import QLineEdit
-from qgis.PyQt.QtWidgets import QDialogButtonBox
-from qgis.PyQt.QtWidgets import QPushButton
-from qgis.core import QgsMapLayer
-from qgis.core import QgsVectorLayer
-from qgis.core import QgsProject
-from qgis.core import QgsWkbTypes
-from qgis.gui import QgsMapLayerComboBox
-from PyQt5.QtGui import QPalette
 from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QPalette
+from qgis.PyQt.QtWidgets import QDialog
+from qgis.PyQt.QtWidgets import QDialogButtonBox
+from qgis.PyQt.QtWidgets import QLineEdit
+from qgis.PyQt.QtWidgets import QPushButton
+from qgis.PyQt.QtWidgets import QWidget
+from qgis.core import QgsMapLayer
 
 from ..ui import get_ui_class
 
