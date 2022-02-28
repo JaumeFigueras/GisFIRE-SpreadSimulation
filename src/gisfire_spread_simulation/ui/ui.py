@@ -20,4 +20,4 @@ def get_ui_class(plugin_dir: str, ui_file_name: str) -> Any:
     if os.path.exists(ui_file_path):
         return uic.loadUiType(ui_file_path)[0]
     else:
-        return None
+        return None  # pragma: no cover

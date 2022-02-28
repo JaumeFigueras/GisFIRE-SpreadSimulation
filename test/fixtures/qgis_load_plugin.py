@@ -29,7 +29,7 @@ def qgis_plugin(request: SubRequest) -> Dict[str, Any]:
     paths: Union[str, List[str]] = request.param['paths'] if 'paths' in request.param else None
     names: Union[str, List[str]] = request.param['names'] if 'names' in request.param else None
     if (names is None) or (paths is None):
-        return
+        return  # pragma: no cover
     if not isinstance(paths, list):
         paths: List[str] = [paths]
     if not isinstance(names, list):
