@@ -31,7 +31,7 @@ Fork the repo and enjoy
 ### Compiling the resources
 
 ```console
-pyrcc5 resources.qrc -o resources.py
+pyrcc5 ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/resources.qrc -o ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/resources.py
 ```
 
 ### Translations

@@ -3,6 +3,7 @@
 import os.path
 from typing import Dict
 from typing import Union
+from typing import Tuple
 
 import qgis.utils
 from qgis.PyQt.QtCore import QCoreApplication
@@ -15,7 +16,14 @@ from qgis.PyQt.QtWidgets import QDialog
 from qgis.PyQt.QtWidgets import QMenu
 from qgis.PyQt.QtWidgets import QToolBar
 from qgis.core import QgsMapLayer
+from qgis.core import QgsProject
 from qgis.gui import QgisInterface
+
+# noinspection PyUnresolvedReferences
+from .resources import *
+from .ui.dialogs.settings import SettingsDialog
+
+PLUGIN_NAME = 'gisfire_spread_simulation'
 
 
 class GisFIRESpreadSimulation:
@@ -51,25 +59,12 @@ class GisFIRESpreadSimulation:
         locale_path = os.path.join(
             os.path.dirname(__file__),
             'i18n',
-            'gisfire_spread_simulation_{}.qm'.format(locale[0:2]))
+            '{}_{}.qm'.format(PLUGIN_NAME, locale[0:2]))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
             self.translator.load(locale_path)
             QCoreApplication.installTranslator(self.translator)
-
-        """# initialize locale
-        locale: str = QSettings().value('locale/userLocale')[0:2]
-        plugin_dir = os.path.dirname(__file__)
-        locale_path = os.path.join(
-            plugin_dir,
-            'i18n',
-            'gisfire_spread_simulation_{}.qm'.format(locale.lower()))
-
-        if os.path.exists(locale_path):
-            translator = QTranslator()
-            translator.load(locale_path)
-            QCoreApplication.installTranslator(translator)"""
 
         # Initialization of UI references
         self._toolbar_actions: Dict[str, QAction] = dict()
@@ -77,7 +72,7 @@ class GisFIRESpreadSimulation:
         self._menu: Union[QMenu, None] = None
         self._menu_gisfire: Union[QMenu, None] = None
         self._toolbar: Union[QToolBar, None] = None
-        self._dlg: Union[QDialog, None] = None
+        self._dlg: Union[SettingsDialog, None] = None
         # Initialization of GisFIRE data layers
         self._layers: Dict[str, QgsMapLayer] = dict()
         self._core_application = QCoreApplication.instance()
@@ -100,8 +95,8 @@ class GisFIRESpreadSimulation:
         Creates the toolbar buttons that GisFIRE Spread Simulation uses as shortcuts.
         """
         # Setup parameters
-        action = QAction(
-            QIcon(':/gisfire_spread_simulation/setup.png'),
+        action: QAction = QAction(
+            QIcon(':/{}/setup.png'.format(PLUGIN_NAME)),
             self.tr('Setup GisFIRE Spread Simulation'),
             None
         )
@@ -174,9 +169,8 @@ class GisFIRESpreadSimulation:
         """
         # Setup parameters
         action: QAction = self._menu.addAction(self.tr('Setup'))
-        action.setIcon(QIcon(':/gisfire_spread_simulation/setup.png'))
+        action.setIcon(QIcon(':/{}/setup.png'.format(PLUGIN_NAME)))
         action.setIconVisibleInMenu(True)
-        # noinspection PyUnresolvedReferences
         action.triggered.connect(self.__on_setup)
         self._menu_actions['setup'] = action
         """"# Meteo.cat Download lightnings
@@ -233,7 +227,7 @@ class GisFIRESpreadSimulation:
                 self.iface.mainWindow().menuBar().addMenu(self._menu_gisfire)
         # Create Spread Simulation menu
         self._menu = QMenu(self.tr(u'Spread Simulation'), self._menu_gisfire)
-        self._menu.setIcon(QIcon(':/gisfire_spread_simulation/spread-simulation.png'))
+        self._menu.setIcon(QIcon(':/{}/spread-simulation.png'.format(PLUGIN_NAME)))
         self._menu_gisfire.addMenu(self._menu)
         # Set up the toolbar for spread simulation plugin
         self._toolbar = self.iface.addToolBar(u'GisFIRE Spread Simulation')
@@ -281,22 +275,41 @@ class GisFIRESpreadSimulation:
                 self._menu_gisfire.deleteLater()
 
     def __on_setup(self):
-        pass
-        """self._dlg = DlgSettings(self.iface.mainWindow())
-        qgs_settings = QgsSettings()
-        # Get values and initialize dialog
-        self._dlg.meteocat_api_key = qgs_settings.value("gisfire_lightnings/meteocat_api_key", "")
-        self._dlg.gisfire_api_url = qgs_settings.value("gisfire_lightnings/gisfire_api_url", "")
-        self._dlg.gisfire_api_username = qgs_settings.value("gisfire_lightnings/gisfire_api_username", "")
-        self._dlg.gisfire_api_token = qgs_settings.value("gisfire_lightnings/gisfire_api_token", "")
+        # Initialization
+        project: QgsProject = QgsProject()
+        project_instance: QgsProject = project.instance()
+        self._dlg: SettingsDialog = SettingsDialog(parent=self.iface.mainWindow(), layers=QgsProject.instance().mapLayers())
+        # Retrieve project properties
+        ignition_layer: Union[QgsMapLayer, None] = None
+        ignition_layer_id: str
+        ignition_type_ok: bool
+        ignition_layer_id, ignition_type_ok = project_instance.readEntry(PLUGIN_NAME, 'ignition_layer_id', '')
+        perimeter_layer: Union[QgsMapLayer, None] = None
+        perimeter_layer_id: str
+        perimeter_type_ok: bool
+        perimeter_layer_id, perimeter_type_ok = project_instance.readEntry(PLUGIN_NAME, 'perimeter_layer_id', '')
+        land_cover_layer: Union[QgsMapLayer, None] = None
+        land_cover_layer_id: str
+        land_cover_type_ok: bool
+        land_cover_layer_id, land_cover_type_ok = project_instance.readEntry(PLUGIN_NAME, 'land_cover_layer_id', '')
+        if ignition_type_ok:
+            ignition_layer = project_instance.mapLayer(ignition_layer_id)
+        self._dlg.ignition_layer = ignition_layer
+        if perimeter_type_ok:
+            perimeter_layer = project_instance.mapLayer(perimeter_layer_id)
+        self._dlg.perimeter_layer = perimeter_layer
+        if land_cover_type_ok:
+            land_cover_layer = project_instance.mapLayer(land_cover_layer_id)
+        self._dlg.land_cover_layer = land_cover_layer
         result = self._dlg.exec_()
         if result == QDialog.Accepted:
-            # Store correct values
-            qgs_settings.setValue("gisfire_lightnings/meteocat_api_key", self._dlg.meteocat_api_key)
-            qgs_settings.setValue("gisfire_lightnings/gisfire_api_url", self._dlg.gisfire_api_url)
-            qgs_settings.setValue("gisfire_lightnings/gisfire_api_username", self._dlg.gisfire_api_username)
-            qgs_settings.setValue("gisfire_lightnings/gisfire_api_token", self._dlg.gisfire_api_token)
-            print(self._dlg.meteocat_api_key)
-            print(self._dlg.gisfire_api_url)
-            print(self._dlg.gisfire_api_username)
-            print(self._dlg.gisfire_api_token)"""
+            ignition_layer = self._dlg.ignition_layer
+            perimeter_layer = self._dlg.perimeter_layer
+            land_cover_layer = self._dlg.land_cover_layer
+            project_instance.writeEntry(PLUGIN_NAME, 'ignition_layer_id', ignition_layer.id())
+            project_instance.writeEntry(PLUGIN_NAME, 'perimeter_layer_id', perimeter_layer.id())
+            project_instance.writeEntry(PLUGIN_NAME, 'land_cover_layer_id', land_cover_layer.id())
+
+    # TODO - IMPROVEMENT: Write properties for the ignition, perimeter, and land_cover layers to deal automatically with
+    # TODO - IMPROVEMENT: the layer and the project settings store
+
