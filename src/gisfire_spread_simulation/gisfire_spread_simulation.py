@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import os.path
 from typing import Dict
 from typing import Union
@@ -15,7 +16,6 @@ from qgis.PyQt.QtWidgets import QAction
 from qgis.PyQt.QtWidgets import QDialog
 from qgis.PyQt.QtWidgets import QMenu
 from qgis.PyQt.QtWidgets import QToolBar
-from qgis.core import QgsExpressionContextUtils
 from qgis.core import QgsMapLayer
 from qgis.core import QgsPoint
 from qgis.core import QgsPointXY
@@ -353,8 +353,7 @@ class GisFIRESpreadSimulation:
         # Initialization
         project: QgsProject = QgsProject()
         project_instance: QgsProject = project.instance()
-        self._dlg: SettingsDialog = SettingsDialog(parent=self._iface.mainWindow(), layers=QgsProject.instance().
-                                                   mapLayers())
+        self._dlg: SettingsDialog = SettingsDialog(parent=self._iface.mainWindow(), layers=project_instance.mapLayers())
         # Retrieve project properties
         plugin_version: Union[str, None]
         plugin_version_ok: bool
