@@ -33,7 +33,7 @@ from src.gisfire_spread_simulation.ui.dialogs.settings import SettingsDialog
 def test_layer_name_dialog_01(qgis_app: QgsApplication, qgis_locale: QSettings, qgis_plugin: Dict[str, Any],
                               qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
-    Tests the layer name dialog is correctly shown with an Ok
+    Tests the layer name dialog is correctly shown and destroyed with a Cancel action
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -49,15 +49,16 @@ def test_layer_name_dialog_01(qgis_app: QgsApplication, qgis_locale: QSettings, 
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    QgsProject.instance().addMapLayer(vl_a)
-    QgsProject.instance().addMapLayer(vl_b)
-    QgsProject.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
 
-    dialog: LayerNameDialog = LayerNameDialog(layers=QgsProject.instance().mapLayers())
+    dialog: LayerNameDialog = LayerNameDialog(layers=project_instance.mapLayers())
     assert len(dialog._layer_names) == 3
     qtbot.addWidget(dialog)
     dialog.show()
@@ -76,7 +77,7 @@ def test_layer_name_dialog_01(qgis_app: QgsApplication, qgis_locale: QSettings, 
 def test_layer_name_dialog_02(qgis_app: QgsApplication, qgis_locale: QSettings, qgis_plugin: Dict[str, Any],
                               qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
-    Tests the layer name dialog is correctly shown with an Ok
+    Tests the layer name dialog is correctly shown and destroyed with an Ok action
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -92,15 +93,16 @@ def test_layer_name_dialog_02(qgis_app: QgsApplication, qgis_locale: QSettings, 
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    QgsProject.instance().addMapLayer(vl_a)
-    QgsProject.instance().addMapLayer(vl_b)
-    QgsProject.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
 
-    dialog: LayerNameDialog = LayerNameDialog(layers=QgsProject.instance().mapLayers())
+    dialog: LayerNameDialog = LayerNameDialog(layers=project_instance.mapLayers())
     assert len(dialog._layer_names) == 3
     qtbot.addWidget(dialog)
     dialog.show()
@@ -119,7 +121,7 @@ def test_layer_name_dialog_02(qgis_app: QgsApplication, qgis_locale: QSettings, 
 def test_layer_name_dialog_03(qgis_app: QgsApplication, qgis_locale: QSettings, qgis_plugin: Dict[str, Any],
                               qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
-    Tests the layer name dialog is correctly shown with an Ok
+    Tests the layer name dialog invalidates the input when the user enters an existing layer name
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -135,15 +137,16 @@ def test_layer_name_dialog_03(qgis_app: QgsApplication, qgis_locale: QSettings, 
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    QgsProject.instance().addMapLayer(vl_a)
-    QgsProject.instance().addMapLayer(vl_b)
-    QgsProject.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
 
-    dialog: LayerNameDialog = LayerNameDialog(layers=QgsProject.instance().mapLayers())
+    dialog: LayerNameDialog = LayerNameDialog(layers=project_instance.mapLayers())
     assert len(dialog._layer_names) == 3
     qtbot.addWidget(dialog)
     dialog.show()
@@ -170,7 +173,7 @@ def test_layer_name_dialog_03(qgis_app: QgsApplication, qgis_locale: QSettings, 
 def test_settings_dialog_01(qgis_app: QgsApplication, qgis_locale: QSettings, qgis_plugin: Dict[str, Any],
                             qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
-    Tests the settings dialog is correctly shown with an Ok
+    Tests the settings dialog is correctly shown and destroyed with a Cancel action
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -205,7 +208,7 @@ def test_settings_dialog_01(qgis_app: QgsApplication, qgis_locale: QSettings, qg
 def test_settings_dialog_02(qgis_app: QgsApplication, qgis_locale: QSettings, qgis_plugin: Dict[str, Any],
                             qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
-    Tests the settings dialog is correctly shown with a Cancel
+    Tests the settings dialog is correctly shown and destroyed with an OK action
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -258,24 +261,25 @@ def test_settings_dialog_03(qgis_app: QgsApplication, qgis_locale: QSettings, qg
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     # Create possible vector layers to choose from
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    QgsProject.instance().addMapLayer(vl_a)
-    QgsProject.instance().addMapLayer(vl_b)
-    QgsProject.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
     vl_d = QgsVectorLayer('Polygon', 'd', 'memory')
     vl_e = QgsVectorLayer('Polygon', 'e', 'memory')
     vl_f = QgsVectorLayer('Polygon', 'f', 'memory')
     vl_g = QgsVectorLayer('Polygon', 'g', 'memory')
-    QgsProject.instance().addMapLayer(vl_d)
-    QgsProject.instance().addMapLayer(vl_e)
-    QgsProject.instance().addMapLayer(vl_f)
-    QgsProject.instance().addMapLayer(vl_g)
+    project_instance.addMapLayer(vl_d)
+    project_instance.addMapLayer(vl_e)
+    project_instance.addMapLayer(vl_f)
+    project_instance.addMapLayer(vl_g)
 
-    dialog: SettingsDialog = SettingsDialog(layers=QgsProject.instance().mapLayers())
+    dialog: SettingsDialog = SettingsDialog(layers=project_instance.mapLayers())
     assert dialog._combobox_ignition_layer.count() == 3
     assert dialog._combobox_perimeter_layer.count() == 4
     assert dialog._combobox_land_cover_layer.count() == 4
@@ -321,23 +325,24 @@ def test_settings_dialog_04(qgis_app: QgsApplication, qgis_locale: QSettings, qg
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    QgsProject.instance().addMapLayer(vl_a)
-    QgsProject.instance().addMapLayer(vl_b)
-    QgsProject.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
     vl_d = QgsVectorLayer('Polygon', 'd', 'memory')
     vl_e = QgsVectorLayer('Polygon', 'e', 'memory')
     vl_f = QgsVectorLayer('Polygon', 'f', 'memory')
     vl_g = QgsVectorLayer('Polygon', 'g', 'memory')
-    QgsProject.instance().addMapLayer(vl_d)
-    QgsProject.instance().addMapLayer(vl_e)
-    QgsProject.instance().addMapLayer(vl_f)
-    QgsProject.instance().addMapLayer(vl_g)
+    project_instance.addMapLayer(vl_d)
+    project_instance.addMapLayer(vl_e)
+    project_instance.addMapLayer(vl_f)
+    project_instance.addMapLayer(vl_g)
 
-    dialog: SettingsDialog = SettingsDialog(layers=QgsProject.instance().mapLayers())
+    dialog: SettingsDialog = SettingsDialog(layers=project_instance.mapLayers())
     assert dialog._combobox_ignition_layer.count() == 3
     assert dialog._combobox_perimeter_layer.count() == 4
     assert dialog._combobox_land_cover_layer.count() == 4
@@ -353,10 +358,13 @@ def test_settings_dialog_04(qgis_app: QgsApplication, qgis_locale: QSettings, qg
     qtbot.addWidget(dialog)
     dialog.show()
     assert dialog.isVisible()
-    assert len(QgsProject.instance().mapLayers()) == 7
+    assert len(project_instance.mapLayers()) == 7
     QTimer.singleShot(100, on_timer)
     qtbot.mouseClick(dialog._button_create_new_ignition_layer, qgis.QtCore.Qt.LeftButton)
-    assert len(QgsProject.instance().mapLayers()) == 8
+    assert len(project_instance.mapLayers()) == 8
+    assert dialog._combobox_ignition_layer.count() == 4
+    assert dialog._combobox_perimeter_layer.count() == 4
+    assert dialog._combobox_land_cover_layer.count() == 4
     assert dialog.ignition_layer.name() == 'ignition_new'
     buttons: QDialogButtonBox = dialog._button_box
     button_ok: QPushButton = buttons.button(qgis.PyQt.QtWidgets.QDialogButtonBox.Ok)
@@ -373,7 +381,7 @@ def test_settings_dialog_05(qgis_app: QgsApplication, qgis_locale: QSettings, qg
                             qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
     Tests the settings dialog loads correctly the different layers of the project depending on adds to the system a new
-    ignition layer
+    perimeter layer
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -389,23 +397,24 @@ def test_settings_dialog_05(qgis_app: QgsApplication, qgis_locale: QSettings, qg
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    QgsProject.instance().addMapLayer(vl_a)
-    QgsProject.instance().addMapLayer(vl_b)
-    QgsProject.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
     vl_d = QgsVectorLayer('Polygon', 'd', 'memory')
     vl_e = QgsVectorLayer('Polygon', 'e', 'memory')
     vl_f = QgsVectorLayer('Polygon', 'f', 'memory')
     vl_g = QgsVectorLayer('Polygon', 'g', 'memory')
-    QgsProject.instance().addMapLayer(vl_d)
-    QgsProject.instance().addMapLayer(vl_e)
-    QgsProject.instance().addMapLayer(vl_f)
-    QgsProject.instance().addMapLayer(vl_g)
+    project_instance.addMapLayer(vl_d)
+    project_instance.addMapLayer(vl_e)
+    project_instance.addMapLayer(vl_f)
+    project_instance.addMapLayer(vl_g)
 
-    dialog: SettingsDialog = SettingsDialog(layers=QgsProject.instance().mapLayers())
+    dialog: SettingsDialog = SettingsDialog(layers=project_instance.mapLayers())
     assert dialog._combobox_ignition_layer.count() == 3
     assert dialog._combobox_perimeter_layer.count() == 4
     assert dialog._combobox_land_cover_layer.count() == 4
@@ -421,10 +430,13 @@ def test_settings_dialog_05(qgis_app: QgsApplication, qgis_locale: QSettings, qg
     qtbot.addWidget(dialog)
     dialog.show()
     assert dialog.isVisible()
-    assert len(QgsProject.instance().mapLayers()) == 7
+    assert len(project_instance.mapLayers()) == 7
     QTimer.singleShot(100, on_timer)
     qtbot.mouseClick(dialog._button_create_new_perimeter_layer, qgis.QtCore.Qt.LeftButton)
-    assert len(QgsProject.instance().mapLayers()) == 8
+    assert len(project_instance.mapLayers()) == 8
+    assert dialog._combobox_ignition_layer.count() == 3
+    assert dialog._combobox_perimeter_layer.count() == 5
+    assert dialog._combobox_land_cover_layer.count() == 5
     assert dialog.perimeter_layer.name() == 'perimeter_new'
     buttons: QDialogButtonBox = dialog._button_box
     button_ok: QPushButton = buttons.button(qgis.PyQt.QtWidgets.QDialogButtonBox.Ok)
@@ -441,7 +453,7 @@ def test_settings_dialog_06(qgis_app: QgsApplication, qgis_locale: QSettings, qg
                             qgis_bot: QgisBot, qtbot: QtBot, qgis_new_project: None):
     """
     Tests the settings dialog loads correctly the different layers of the project depending on adds to the system a new
-    ignition layer
+    perimeter layer, when closed the setting dialog is cancelled and therefore all new layers are discarded
 
     :param qgis_app: QGIS application fixture
     :type qgis_app: QgsApplication
@@ -457,24 +469,24 @@ def test_settings_dialog_06(qgis_app: QgsApplication, qgis_locale: QSettings, qg
     :type qgis_new_project: None
     """
     assert type(qgis.utils.plugins['gisfire_spread_simulation']).__name__ == 'GisFIRESpreadSimulation'
-
+    project: QgsProject = QgsProject()
+    project_instance: QgsProject = project.instance()
     vl_a = QgsVectorLayer('Point', 'a', 'memory')
     vl_b = QgsVectorLayer('Point', 'b', 'memory')
     vl_c = QgsVectorLayer('Point', 'c', 'memory')
-    project: QgsProject = QgsProject()
-    project.instance().addMapLayer(vl_a)
-    project.instance().addMapLayer(vl_b)
-    project.instance().addMapLayer(vl_c)
+    project_instance.addMapLayer(vl_a)
+    project_instance.addMapLayer(vl_b)
+    project_instance.addMapLayer(vl_c)
     vl_d = QgsVectorLayer('Polygon', 'd', 'memory')
     vl_e = QgsVectorLayer('Polygon', 'e', 'memory')
     vl_f = QgsVectorLayer('Polygon', 'f', 'memory')
     vl_g = QgsVectorLayer('Polygon', 'g', 'memory')
-    project.instance().addMapLayer(vl_d)
-    project.instance().addMapLayer(vl_e)
-    project.instance().addMapLayer(vl_f)
-    project.instance().addMapLayer(vl_g)
+    project_instance.addMapLayer(vl_d)
+    project_instance.addMapLayer(vl_e)
+    project_instance.addMapLayer(vl_f)
+    project_instance.addMapLayer(vl_g)
 
-    dialog: SettingsDialog = SettingsDialog(layers=QgsProject.instance().mapLayers())
+    dialog: SettingsDialog = SettingsDialog(layers=project_instance.mapLayers())
     assert dialog._combobox_ignition_layer.count() == 3
     assert dialog._combobox_perimeter_layer.count() == 4
     assert dialog._combobox_land_cover_layer.count() == 4
@@ -720,3 +732,4 @@ def test_settings_application_03(qgis_app: QgsApplication, qgis_locale: QSetting
                                                                          'land_cover_layer_id', '')
     assert land_cover_type_ok
     assert land_cover_layer_id == vl_f.id()
+    assert plugin._toolbar_actions['new_ignition'].isEnabled()

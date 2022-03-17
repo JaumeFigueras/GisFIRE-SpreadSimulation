@@ -91,6 +91,12 @@
          <property name="displayFormat">
           <string>dd/MM/yyyy HH:mm:ss</string>
          </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+         <property name="timeSpec">
+          <enum>Qt::LocalTime</enum>
+         </property>
         </widget>
        </item>
       </layout>

@@ -48,22 +48,31 @@ class SettingsDialog(QDialog, FORM_CLASS):
         self._button_box: Union[QDialogButtonBox, None] = None
         self._layers: Union[Dict[str, QgsMapLayer], None] = layers
         self._dlg: Union[LayerNameDialog, None] = None
+        self._excepted_ignition_layers: List[QgsMapLayer]
+        self._excepted_perimeter_layers: List[QgsMapLayer]
+        self._excepted_land_cover_layers: List[QgsMapLayer]
         QDialog.__init__(self, parent)
         self.setupUi(self)
         if layers is not None:
-            ignition_layers: List[QgsMapLayer] = [lyr for lyr in layers.values() if isinstance(lyr, QgsVectorLayer) and
-                                                  lyr.geometryType() != QgsWkbTypes.PointGeometry]
-            perimeter_layers: List[QgsMapLayer] = [lyr for lyr in layers.values() if isinstance(lyr, QgsVectorLayer) and
-                                                   lyr.geometryType() != QgsWkbTypes.PolygonGeometry]
-            land_cover_layers: List[QgsMapLayer] = [lyr for lyr in layers.values() if isinstance(lyr, QgsVectorLayer)
-                                                    and lyr.geometryType() != QgsWkbTypes.PolygonGeometry]
-            self._combobox_ignition_layer.setExceptedLayerList(ignition_layers)
-            self._combobox_perimeter_layer.setExceptedLayerList(perimeter_layers)
-            self._combobox_land_cover_layer.setExceptedLayerList(land_cover_layers)
+            self._excepted_ignition_layers: List[QgsMapLayer] = [lyr for lyr in layers.values() if
+                                                                 isinstance(lyr, QgsVectorLayer) and
+                                                                 lyr.geometryType() != QgsWkbTypes.PointGeometry]
+            self._excepted_perimeter_layers: List[QgsMapLayer] = [lyr for lyr in layers.values() if
+                                                                  isinstance(lyr, QgsVectorLayer) and
+                                                                  lyr.geometryType() != QgsWkbTypes.PolygonGeometry]
+            self._excepted_land_cover_layers: List[QgsMapLayer] = [lyr for lyr in layers.values() if
+                                                                   isinstance(lyr, QgsVectorLayer) and
+                                                                   lyr.geometryType() != QgsWkbTypes.PolygonGeometry]
+            self._combobox_ignition_layer.setExceptedLayerList(self._excepted_ignition_layers)
+            self._combobox_perimeter_layer.setExceptedLayerList(self._excepted_perimeter_layers)
+            self._combobox_land_cover_layer.setExceptedLayerList(self._excepted_land_cover_layers)
+        # noinspection PyUnresolvedReferences
         self._button_create_new_ignition_layer.clicked.connect(self._on_click_new_ignition_layer)
+        # noinspection PyUnresolvedReferences
         self._button_create_new_perimeter_layer.clicked.connect(self._on_click_new_perimeter_layer)
         buttons: QDialogButtonBox = self._button_box
         button_cancel: QPushButton = buttons.button(QDialogButtonBox.Cancel)
+        # noinspection PyUnresolvedReferences
         button_cancel.clicked.connect(self._on_cancel)
         self._created_layers: List[QgsVectorLayer] = list()
 
@@ -75,6 +84,10 @@ class SettingsDialog(QDialog, FORM_CLASS):
             add_layer_in_position(layer, 1)
             self._combobox_ignition_layer.setLayer(layer)
             self._created_layers.append(layer)
+            self._excepted_perimeter_layers.append(layer)
+            self._excepted_land_cover_layers.append(layer)
+            self._combobox_perimeter_layer.setExceptedLayerList(self._excepted_perimeter_layers)
+            self._combobox_land_cover_layer.setExceptedLayerList(self._excepted_land_cover_layers)
 
     def _on_click_new_perimeter_layer(self):
         self._dlg: LayerNameDialog = LayerNameDialog(parent=self, layers=self._layers)
@@ -84,6 +97,8 @@ class SettingsDialog(QDialog, FORM_CLASS):
             add_layer_in_position(layer, 1)
             self._combobox_perimeter_layer.setLayer(layer)
             self._created_layers.append(layer)
+            self._excepted_ignition_layers.append(layer)
+            self._combobox_ignition_layer.setExceptedLayerList(self._excepted_ignition_layers)
 
     def _on_cancel(self):
         for layer in self._created_layers:

@@ -2,5 +2,6 @@
     <qresource prefix="/gisfire_spread_simulation" >
       <file alias="spread-simulation.png">/icons/gisfire-spread-simulation-64px.png</file>
       <file alias="setup.png">/icons/setup-64px.png</file>
+      <file alias="new_ignition.png">/icons/ignition-point-64px.png</file>
     </qresource>
 </RCC>

@@ -4,4 +4,5 @@
 pytest_plugins = [
     'test.fixtures.locale',
     'test.fixtures.qgis_load_plugin',
+    'test.fixtures.projects',
 ]
