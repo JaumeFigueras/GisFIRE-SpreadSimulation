@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from fuel_model import FuelModel
-from fuel_model import FuelModelType
+from gisfire_spread_simulation.fuel_models.fuel_model import FuelModel
+from gisfire_spread_simulation.fuel_models.fuel_model import FuelModelType
+
+model_0 = FuelModel(code='0')
 
 model_1 = FuelModel(
     code='1',
@@ -47,6 +49,7 @@ model_2 = FuelModel(
 )
 
 fuel_models = {
+    model_0.code: model_0,
     model_1.code: model_1,
     model_2.code: model_2,
 }

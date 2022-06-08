@@ -95,7 +95,7 @@
           <bool>true</bool>
          </property>
          <property name="timeSpec">
-          <enum>Qt::LocalTime</enum>
+          <enum>Qt::TimeZone</enum>
          </property>
         </widget>
        </item>

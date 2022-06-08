@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import sys
+# For linux
+sys.path.append('/usr/share/qgis/python/plugins')
+# For Windows
+sys.path.append('C:\\QGIS\\apps\\qgis\\python\\plugins')
+
 
 # noinspection PyPep8Naming
 def classFactory(iface):

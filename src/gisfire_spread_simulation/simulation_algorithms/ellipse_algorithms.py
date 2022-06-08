@@ -10,17 +10,17 @@ class EllipseAlgorithm:
 
     # noinspection PyPep8Naming
     @staticmethod
-    def alexander(ros: float, Ue: float) -> Tuple[float, float, float]:
+    def alexander(ros: float, wind: float) -> Tuple[float, float, float]:
         """
         TODO
         :param ros:
         :type ros:
-        :param Ue:
-        :type Ue:
+        :param wind:
+        :type wind:
         :return:
         :rtype:
         """
-        LB = 0.936 * exp(0.2566 * Ue) + 0.461 * exp(-0.1548 * Ue) - 0.397
+        LB = 0.936 * exp(0.2566 * wind) + 0.461 * exp(-0.1548 * wind) - 0.397
         HB = (LB + pow(pow(LB, 2) - 1, 0.5)) / (LB - pow(pow(LB, 2) - 1, 0.5))
         a = 0.5 * (ros + ros / HB) / LB
         b = (ros + ros / HB) / 2

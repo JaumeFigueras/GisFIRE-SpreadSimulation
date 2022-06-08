@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations  # Needed to allow returning type of enclosing class PEP 563
+
 from typing import Union
 from enum import Enum
 
@@ -12,8 +14,6 @@ class FuelModelType(Enum):
 
 class FuelModel:
     TONS_ACRE_TO_LB_FT2 = 2000.0 / 43560.0
-    METER_SECOND_TO_FEET_MINUTE = 3.28084 * 60
-    FEET_TO_METER = 0.3048
 
     def __init__(self, code: Union[str, None] = None, name: Union[str, None] = None,
                  fuel_load_1_h: Union[float, None] = None, fuel_load_10_h: Union[float, None] = None,
@@ -124,142 +124,146 @@ class FuelModel:
         return self._code
 
     @code.setter
-    def code(self, code: str) -> None:
-        self._code = code
+    def code(self, cd: str) -> None:
+        self._code = cd
 
     @property
     def name(self) -> str:
         return self._name
 
     @name.setter
-    def name(self, name: str) -> None:
-        self._name = name
+    def name(self, nm: str) -> None:
+        self._name = nm
 
     @property
     def fuel_load_1_h(self) -> float:
         return self._fuel_load_1_h
 
     @fuel_load_1_h.setter
-    def fuel_load_1_h(self, fuel_load_1_h: float) -> None:
-        self._fuel_load_1_h = fuel_load_1_h
+    def fuel_load_1_h(self, value: float) -> None:
+        self._fuel_load_1_h = value
 
     @property
     def fuel_load_10_h(self) -> float:
         return self._fuel_load_10_h
 
     @fuel_load_10_h.setter
-    def fuel_load_10_h(self, fuel_load_10_h: float) -> None:
-        self._fuel_load_10_h = fuel_load_10_h
+    def fuel_load_10_h(self, value: float) -> None:
+        self._fuel_load_10_h = value
 
     @property
     def fuel_load_100_h(self) -> float:
         return self._fuel_load_100_h
 
     @fuel_load_100_h.setter
-    def fuel_load_100_h(self, fuel_load_100_h: float) -> None:
-        self._fuel_load_100_h = fuel_load_100_h
+    def fuel_load_100_h(self, value: float) -> None:
+        self._fuel_load_100_h = value
 
     @property
     def fuel_load_live_herb(self) -> float:
         return self._fuel_load_live_herb
 
     @fuel_load_live_herb.setter
-    def fuel_load_live_herb(self, fuel_load_live_herb: float) -> None:
-        self._fuel_load_live_herb = fuel_load_live_herb
+    def fuel_load_live_herb(self, value: float) -> None:
+        self._fuel_load_live_herb = value
 
     @property
     def fuel_load_live_wood(self) -> float:
         return self._fuel_load_live_wood
 
     @fuel_load_live_wood.setter
-    def fuel_load_live_wood(self, fuel_load_live_wood: float) -> None:
-        self._fuel_load_live_wood = fuel_load_live_wood
+    def fuel_load_live_wood(self, value: float) -> None:
+        self._fuel_load_live_wood = value
 
     @property
     def sav_ratio_1_h(self) -> float:
         return self._sav_ratio_1_h
 
     @sav_ratio_1_h.setter
-    def sav_ratio_1_h(self, sav_ratio_1_h: float) -> None:
-        self._sav_ratio_1_h = sav_ratio_1_h
+    def sav_ratio_1_h(self, value: float) -> None:
+        self._sav_ratio_1_h = value
 
     @property
     def sav_ratio_10_h(self) -> float:
         return self._mineral_content
 
     @sav_ratio_10_h.setter
-    def sav_ratio_10_h(self, sav_ratio_10_h: float) -> None:
-        self._sav_ratio_10_h = sav_ratio_10_h
+    def sav_ratio_10_h(self, value: float) -> None:
+        self._sav_ratio_10_h = value
 
     @property
     def sav_ratio_100_h(self) -> float:
         return self._mineral_content
 
     @sav_ratio_100_h.setter
-    def sav_ratio_100_h(self, sav_ratio_100_h: float) -> None:
-        self._sav_ratio_100_h = sav_ratio_100_h
+    def sav_ratio_100_h(self, value: float) -> None:
+        self._sav_ratio_100_h = value
 
     @property
     def sav_ratio_live_herb(self) -> float:
         return self._sav_ratio_live_herb
 
     @sav_ratio_live_herb.setter
-    def sav_ratio_live_herb(self, sav_ratio_live_herb: float) -> None:
-        self._sav_ratio_live_herb = sav_ratio_live_herb
+    def sav_ratio_live_herb(self, value: float) -> None:
+        self._sav_ratio_live_herb = value
 
     @property
     def sav_ratio_live_wood(self) -> float:
         return self._sav_ratio_live_wood
 
     @sav_ratio_live_wood.setter
-    def sav_ratio_live_wood(self, sav_ratio_live_wood: float) -> None:
-        self._sav_ratio_live_wood = sav_ratio_live_wood
+    def sav_ratio_live_wood(self, value: float) -> None:
+        self._sav_ratio_live_wood = value
 
     @property
     def fuel_bed_depth(self) -> float:
         return self._fuel_bed_depth
 
     @fuel_bed_depth.setter
-    def fuel_bed_depth(self, fuel_bed_depth: float) -> None:
-        self._fuel_bed_depth = fuel_bed_depth
+    def fuel_bed_depth(self, value: float) -> None:
+        self._fuel_bed_depth = value
 
     @property
     def moisture_of_extinction(self) -> float:
         return self._moisture_of_extinction
 
     @moisture_of_extinction.setter
-    def moisture_of_extinction(self, moisture_of_extinction: float) -> None:
-        self._moisture_of_extinction = moisture_of_extinction
+    def moisture_of_extinction(self, value: float) -> None:
+        self._moisture_of_extinction = value
 
     @property
     def sav_ratio(self) -> float:
         return self._sav_ratio
 
     @sav_ratio.setter
-    def sav_ratio(self, sav_ratio: float) -> None:
-        self._sav_ratio = sav_ratio
+    def sav_ratio(self, value: float) -> None:
+        self._sav_ratio = value
 
     @property
     def bulk_density(self) -> float:
         return self._bulk_density
 
     @bulk_density.setter
-    def bulk_density(self, bulk_density: float) -> None:
-        self._bulk_density = bulk_density
+    def bulk_density(self, value: float) -> None:
+        self._bulk_density = value
 
     @property
     def relative_packing_ratio(self) -> float:
         return self._relative_packing_ratio
 
     @relative_packing_ratio.setter
-    def relative_packing_ratio(self, relative_packing_ratio: float) -> None:
-        self._relative_packing_ratio = relative_packing_ratio
+    def relative_packing_ratio(self, value: float) -> None:
+        self._relative_packing_ratio = value
 
     @property
     def model_type(self) -> FuelModelType:
         return self._model_type
 
     @model_type.setter
-    def model_type(self, model_type: FuelModelType) -> None:
-        self._model_type = model_type
+    def model_type(self, value: FuelModelType) -> None:
+        self._model_type = value
 
+    def __eq__(self, other: FuelModel) -> bool:
+        if not isinstance(other, FuelModel):
+            return False
+        return self._code == other._code

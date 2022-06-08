@@ -4,6 +4,7 @@
 import os.path
 from typing import Dict
 from typing import Union
+import datetime
 
 import qgis.utils
 from PyQt5.QtCore import Qt
@@ -31,6 +32,13 @@ from .qgis_helper_functions.layer import add_ignition_point
 from .resources import *
 from .ui.dialogs.ignition_datetime import IgnitionDateTimeDialog
 from .ui.dialogs.settings import SettingsDialog
+from gisfire_spread_simulation.simulation_algorithms.spread_simulator import SpreadSimulator
+
+from qgis.analysis import QgsNativeAlgorithms
+from qgis.core import QgsApplication
+from processing.core.Processing import Processing
+Processing.initialize()
+QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms()) # NOQA
 
 
 class GisFIRESpreadSimulation:
@@ -91,6 +99,7 @@ class GisFIRESpreadSimulation:
         self._ignition_layer: Union[QgsVectorLayer, None] = None
         self._perimeter_layer: Union[QgsVectorLayer, None] = None
         self._land_cover_layer: Union[QgsVectorLayer, None] = None
+        self._simulator: SpreadSimulator = SpreadSimulator()
         # noinspection PyUnresolvedReferences
         self._iface.newProjectCreated.connect(self.__on_new_project)
         project = QgsProject()
@@ -149,6 +158,36 @@ class GisFIRESpreadSimulation:
         action.setWhatsThis(self.tr('Create ignition point'))
         self._toolbar.addAction(action)
         self._toolbar_actions['new_ignition'] = action
+        # Separator
+        self._toolbar.addSeparator()
+        # Reset Simulation
+        action: QAction = QAction(
+            QIcon(':/{}/reset.png'.format(self.PLUGIN_NAME)),
+            self.tr('Reset Simulation'),
+            None
+        )
+        # noinspection PyUnresolvedReferences
+        action.triggered.connect(self._on_reset_simulation)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Reset Simulation'))
+        action.setWhatsThis(self.tr('Reset Simulation'))
+        self._toolbar.addAction(action)
+        self._toolbar_actions['simulation_reset'] = action
+        # Reset Simulation
+        action: QAction = QAction(
+            QIcon(':/{}/step.png'.format(self.PLUGIN_NAME)),
+            self.tr('Step Simulation'),
+            None
+        )
+        # noinspection PyUnresolvedReferences
+        action.triggered.connect(self._on_step_simulation)
+        action.setEnabled(True)
+        action.setCheckable(False)
+        action.setStatusTip(self.tr('Step Simulation'))
+        action.setWhatsThis(self.tr('Step Simulation'))
+        self._toolbar.addAction(action)
+        self._toolbar_actions['simulation_step'] = action
 
     def __add_menu_actions(self) -> None:
         """
@@ -164,6 +203,8 @@ class GisFIRESpreadSimulation:
         # noinspection PyUnresolvedReferences
         action.triggered.connect(self.__on_setup)
         self._menu_actions['setup'] = action
+        # Add separator
+        self._menu.addSeparator()
         # Create ignition point
         action: QAction = self._menu.addAction(self.tr('Create ignition point'))
         action.setIcon(QIcon(':/{}/new_ignition.png'.format(self.PLUGIN_NAME)))
@@ -172,6 +213,22 @@ class GisFIRESpreadSimulation:
         # noinspection PyUnresolvedReferences
         action.triggered.connect(self._on_create_ignition_point)
         self._menu_actions['new_ignition'] = action
+        # Add separator
+        self._menu.addSeparator()
+        # Reset Simulation
+        action: QAction = self._menu.addAction(self.tr('Reset Simulation'))
+        action.setIcon(QIcon(':/{}/reset.png'.format(self.PLUGIN_NAME)))
+        action.setIconVisibleInMenu(True)
+        # noinspection PyUnresolvedReferences
+        action.triggered.connect(self._on_reset_simulation)
+        self._menu_actions['simulation_reset'] = action
+        # Setup parameters
+        action: QAction = self._menu.addAction(self.tr('Step simulation'))
+        action.setIcon(QIcon(':/{}/step.png'.format(self.PLUGIN_NAME)))
+        action.setIconVisibleInMenu(True)
+        # noinspection PyUnresolvedReferences
+        action.triggered.connect(self._on_step_simulation)
+        self._menu_actions['simulation_step'] = action
 
     def __enable_menu_entries(self, enable: bool = True) -> None:
         """
@@ -371,6 +428,16 @@ class GisFIRESpreadSimulation:
         land_cover_type_ok: bool
         land_cover_layer_id, land_cover_type_ok = project_instance.readEntry(self.PLUGIN_NAME, 'land_cover_layer_id',
                                                                              '')
+        simulation_time_step: Union[int, None]
+        simulation_time_step_str: str
+        simulation_time_step_ok: bool
+        simulation_time_step_str, simulation_time_step_ok = project_instance.readEntry(self.PLUGIN_NAME, 'simulation_time_step', '')
+        simulation_time_step = int(simulation_time_step_str) if simulation_time_step_str != '' else 60
+        simulation_start_date: Union[datetime.datetime, None]
+        simulation_start_date_str: str
+        simulation_start_date_ok: bool
+        simulation_start_date_str, simulation_start_date_ok = project_instance.readEntry(self.PLUGIN_NAME, 'simulation_start_date', '')
+
         if ignition_type_ok:
             ignition_layer = project_instance.mapLayer(ignition_layer_id)
         self._dlg.ignition_layer = ignition_layer
@@ -380,14 +447,27 @@ class GisFIRESpreadSimulation:
         if land_cover_type_ok:
             land_cover_layer = project_instance.mapLayer(land_cover_layer_id)
         self._dlg.land_cover_layer = land_cover_layer
+        if simulation_time_step_ok:
+            self._dlg.simulation_time_step = simulation_time_step
+        if simulation_start_date_ok:
+            simulation_start_date = datetime.datetime.strptime(simulation_start_date_str, "%Y-%m-%dT%H:%M:%S%Z")
+            self._dlg.simulation_start_date = simulation_start_date
         result = self._dlg.exec_()
         if result == QDialog.Accepted:
             self._ignition_layer = self._dlg.ignition_layer
             self._perimeter_layer = self._dlg.perimeter_layer
             self._land_cover_layer = self._dlg.land_cover_layer
+            self._simulator.time_step = self._dlg.simulation_time_step
+            self._simulator.start_date = self._dlg.simulation_start_date
+            self._simulator.ignition_layer = self._ignition_layer
+            self._simulator.perimeter_layer = self._perimeter_layer
+            self._simulator.fuel_layer = self._land_cover_layer
             project_instance.writeEntry(self.PLUGIN_NAME, 'ignition_layer_id', self._ignition_layer.id())
             project_instance.writeEntry(self.PLUGIN_NAME, 'perimeter_layer_id', self._perimeter_layer.id())
             project_instance.writeEntry(self.PLUGIN_NAME, 'land_cover_layer_id', self._land_cover_layer.id())
+            project_instance.writeEntry(self.PLUGIN_NAME, 'simulation_time_step', str(self._dlg.simulation_time_step))
+            project_instance.writeEntry(self.PLUGIN_NAME, 'simulation_start_date',
+                                        self._dlg.simulation_start_date.strftime("%Y-%m-%dT%H:%M:%S%Z"))
             if plugin_version is None or plugin_version != self.VERSION:
                 project_instance.writeEntry(self.PLUGIN_NAME, 'version', self.VERSION)
             # Updates UI
@@ -477,6 +557,26 @@ class GisFIRESpreadSimulation:
                                                                                  '')
             if land_cover_type_ok:
                 self._land_cover_layer = project_instance.mapLayer(land_cover_layer_id)
+            self._simulator.ignition_layer = self._ignition_layer
+            self._simulator.perimeter_layer = self._perimeter_layer
+            self._simulator.fuel_layer = self._land_cover_layer
+            simulation_time_step: Union[int, None]
+            simulation_time_step_str: str
+            simulation_time_step_ok: bool
+            simulation_time_step_str, simulation_time_step_ok = project_instance.readEntry(self.PLUGIN_NAME,
+                                                                                           'simulation_time_step', '')
+            simulation_time_step = int(simulation_time_step_str) if simulation_time_step_str != '' else 60
+            if simulation_time_step_ok:
+                self._simulator.time_step = simulation_time_step
+            simulation_start_date: Union[datetime.datetime, None]
+            simulation_start_date_str: str
+            simulation_start_date_ok: bool
+            simulation_start_date_str, simulation_start_date_ok = project_instance.readEntry(self.PLUGIN_NAME,
+                                                                                             'simulation_start_date',
+                                                                                             '')
+            if simulation_start_date_ok:
+                simulation_start_date = datetime.datetime.strptime(simulation_start_date_str, "%Y-%m-%dT%H:%M:%S%Z")
+                self._simulator.start_date = simulation_start_date
         else:
             # Update the UI
             self.__enable_menu_entries(False)
@@ -487,6 +587,11 @@ class GisFIRESpreadSimulation:
             self._ignition_layer = None
             self._perimeter_layer = None
             self._land_cover_layer = None
+            self._simulator.ignition_layer = None
+            self._simulator.perimeter_layer = None
+            self._simulator.fuel_layer = None
+            self._simulator.start_date = None
+            self._simulator.time_step = 60
 
     def __on_new_project(self) -> None:
         """
@@ -505,6 +610,18 @@ class GisFIRESpreadSimulation:
         self._ignition_layer = None
         self._perimeter_layer = None
         self._land_cover_layer = None
+        self._simulator.ignition_layer = None
+        self._simulator.perimeter_layer = None
+        self._simulator.fuel_layer = None
+        self._simulator.start_date = None
+        self._simulator.time_step = 60
 
     # TODO - IMPROVEMENT: Write properties for the ignition, perimeter, and land_cover layers to deal automatically with
     # TODO - IMPROVEMENT: the layer and the project settings store
+
+    def _on_reset_simulation(self):
+        self._simulator.reset_simulation()
+
+    def _on_step_simulation(self):
+        self._simulator.simulation_step()
+

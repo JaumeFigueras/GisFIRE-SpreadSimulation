@@ -125,7 +125,7 @@ def add_ignition_point(point: QgsPoint, date: datetime.datetime, layer: QgsVecto
     :rtype: bool
     """
     feature: QgsFeature = QgsFeature(layer.fields())
-    feature.setAttribute('datetime', date.strftime("%Y-%m-%dT%H:%M:%S"))
+    feature.setAttribute('datetime', date.strftime("%Y-%m-%dT%H:%M:%S%Z"))
     feature.setGeometry(point)
     result: bool
     result, _ = layer.dataProvider().addFeatures([feature])
