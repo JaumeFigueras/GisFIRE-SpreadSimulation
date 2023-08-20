@@ -38,15 +38,15 @@ pyrcc5 ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/resources.qrc -
 
 First generate the `.ts` file from the `.py` and `.ui` files.
 ```console
-pylupdate5 ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/gisfire_spread_simulation.py -ts ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/i18n/gisfire_spread_simulation_ca.ts
-pylupdate5 ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/ui/dialogs/settings.ui -ts ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/i18n/gisfire_spread_simulation_ca.ts
+pylupdate5 ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/gisfire_spread_simulation.py -ts ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/i18n/gisfire_lightnings_ca.ts
+pylupdate5 ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/ui/dialogs/settings.ui -ts ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/i18n/gisfire_lightnings_ca.ts
 ```
 
 Then use QLinguist to translate to different languages
 
 Finally, compile the `.ts` translation files to binary `.qm` files.
 ```console
-lrelease ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/i18n/gisfire_spread_simulation_ca.ts
+lrelease ../GisFIRE-SpreadSimulation/src/gisfire_spread_simulation/i18n/gisfire_lightnings_ca.ts
 ```
 ### Running the tests
 
